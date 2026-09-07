@@ -4,11 +4,15 @@ on:
   push:
     tags:
       - "*"
+  workflow_dispatch:
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
@@ -22,12 +26,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: kagurazakanyaa/palworld
+          images: The-Cheeser/palworld
 
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v7
         with:
+          context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
